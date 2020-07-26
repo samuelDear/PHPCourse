@@ -1,39 +1,8 @@
 <?php
+    include_once('jobs.php');
     $lastname = 'Rojas';
     $name = "Samuel $lastname";
-    $limitMonths = 12;
-    $jobs = [
-      [
-        'title' => 'PHP Developer',
-        'description' => 'This is an awesome job!!',
-        'visible' => true,
-        'months' => 6
-      ],
-      [
-        'title' => 'Python Dev',
-        'description' => 'This is an awesome job!!',
-        'visible' => false,
-        'months' => 4
-      ],
-      [
-        'title' => 'DevOps',
-        'description' => 'This is an awesome job!!',
-        'visible' => false,
-        'months' => 5
-      ],
-      [
-        'title' => 'Node Dev',
-        'description' => 'This is an awesome job!!',
-        'visible' => true,
-        'months' => 2
-      ],
-      [
-        'title' => 'Frontend Dev',
-        'description' => 'This is an awesome job!!',
-        'visible' => true,
-        'months' => 3
-      ],
-    ];
+    $limitMonths = 2000;
 ?>
 
 <!doctype html>
@@ -89,25 +58,13 @@
             $qtyjobs = sizeof($jobs);
             do{
 
-              $totalMonths += $jobs[$idx]['months'];
+              $totalMonths += $jobs[$idx]->months;
 
               if($totalMonths > $limitMonths){
                 break;
               }
 
-              if($jobs[$idx]['visible']){
-                echo '<li class="work-position">';
-                echo '<h5>'.$jobs[$idx]['title'].'</h5>';
-                echo '<p>'.$jobs[$idx]['description'].'</p>';
-                echo '<p>'.$totalMonths.'</p>';
-                echo '<strong>Achievements:</strong>';
-                echo '<ul>';
-                echo '<li>Lorem ipsum dolor sit amet, 80% consectetuer adipiscing elit.</li>';
-                echo '<li>Lorem ipsum dolor sit amet, 80% consectetuer adipiscing elit.</li>';
-                echo '<li>Lorem ipsum dolor sit amet, 80% consectetuer adipiscing elit.</li>';
-                echo '</ul>';
-                echo '</li>';
-              }
+              printJob($jobs[$idx]);
               $idx++;
             }while($idx < $qtyjobs);
           ?>
@@ -172,7 +129,7 @@
     </div>
     <div id="resume-footer" class="row">
       <div class="col">
-          Designed by @hectorbenitez
+          Designed by @samueldear
       </div>
     </div>
   </div>
