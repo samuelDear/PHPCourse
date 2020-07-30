@@ -1,5 +1,30 @@
 <?php
+
+    require_once('vendor/autoload.php');
+
+    use Illuminate\Database\Capsule\Manager as Capsule;
+    use App\Models\Job;
+
+    $capsule = new Capsule;
+
+    $capsule->addConnection([
+      'driver'    => 'mysql',
+      'host'      => 'localhost',
+      'database'  => 'cursophp',
+      'username'  => 'root',
+      'password'  => '',
+      'charset'   => 'utf8',
+      'collation' => 'utf8_unicode_ci',
+      'prefix'    => '',
+    ]);
+
+    // Make this Capsule instance available globally via static methods... (optional)
+    $capsule->setAsGlobal();
+    // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
+    $capsule->bootEloquent();
+
     include_once('jobs.php');
+    
     $lastname = 'Rojas';
     $name = "Samuel $lastname";
     $limitMonths = 2000;
@@ -64,7 +89,7 @@
                 break;
               }
 
-              printJob($jobs[$idx]);
+              printElement($jobs[$idx]);
               $idx++;
             }while($idx < $qtyjobs);
           ?>
@@ -72,6 +97,18 @@
         </div>
         <div>
             <h3 class="border-bottom-gray">Projects</h3>
+            <ul>
+            <?php 
+             $idx = 0;
+             $totalMonths = 0;
+             $qtyprojects = sizeof($projects);
+             do{
+               printElement($projects[$idx]);
+               $idx++;
+             }while($idx < $qtyprojects);
+            ?>
+            </ul>
+            
             <div class="project">
                 <h5>Project X</h5>
                 <div class="row">
