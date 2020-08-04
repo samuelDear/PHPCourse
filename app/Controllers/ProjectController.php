@@ -1,18 +1,20 @@
 <?php 
 
-    use App\Models\Job;
     namespace App\Controllers;
 
-    class ProjectController {
-        public function getAddProjectAction(){
-            if(!empty($_POST)) {
+    use App\Models\Project;
+
+    class ProjectController extends BaseController {
+        public function getAddProjectAction($request){
+            if($request->getMethod() == 'POST') {
+                $postData = $request->getParsedBody();
                 $project = new Project();
-                $project->title = $_POST['title'];
-                $project->dsc = $_POST['description'];
+                $project->title = $postData['title'];
+                $project->dsc = $postData['description'];
                 $project->save();
             }
 
-            include('../views/addProject.php');
+            return $this->renderHTML('addProject.twig');
         }
     }
 ?>

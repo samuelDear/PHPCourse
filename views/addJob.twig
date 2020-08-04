@@ -1,0 +1,13 @@
+{% extends "layout.twig" %}
+
+
+{% block content %}
+    <h1>Add Job</h1>
+    <form action="/PHPCourse/jobs/add" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title"><br>
+        <label for="dsc">Description:</label>
+        <input type="text" id="dsc" name="description"><br>
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

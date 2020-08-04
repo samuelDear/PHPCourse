@@ -49,6 +49,15 @@
         'action' => 'getAddProjectAction'
     ]);
 
+    $map->post('saveJobs', '/PHPCourse/jobs/add', [
+        'controller' => 'App\Controllers\JobsController',
+        'action' => 'getAddJobAction'
+    ]);
+    $map->post('saveProjects', '/PHPCourse/project/add', [
+        'controller' => 'App\Controllers\ProjectController',
+        'action' => 'getAddProjectAction'
+    ]);
+
     $matcher = $routerContainer->getMatcher();
     $route = $matcher->match($request);
 
@@ -60,8 +69,10 @@
         $actionName = $handlerData['action'];
 
         $controller = new $controllerName;
-        $controller->$actionName();
+        $response = $controller->$actionName($request);
         //require($route->handler);
+
+        echo $response->getBody();
     }
 
     //var_dump($route->handler);
