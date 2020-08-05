@@ -3,11 +3,17 @@
 
 {% block content %}
     <h1>Add Job</h1>
-    <form action="/PHPCourse/jobs/add" method="POST">
+    {% if responseMsg %}
+        <div class="alert alert-primary" role="alert">
+            {{ responseMsg }}
+        </div>
+    {% endif %}
+    <form action="/PHPCourse/jobs/add" method="POST" enctype="multipart/form-data">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title"><br>
         <label for="dsc">Description:</label>
         <input type="text" id="dsc" name="description"><br>
+        <input type="file" name="logo"><br>
         <button type="submit">Save</button>
     </form>
 {% endblock %}

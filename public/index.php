@@ -5,6 +5,11 @@
 
     require_once('../vendor/autoload.php');
 
+    session_start();
+
+    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..');
+    $dotenv->load();
+
     use Illuminate\Database\Capsule\Manager as Capsule;
     use Aura\Router\RouterContainer;
 
@@ -12,10 +17,10 @@
 
     $capsule->addConnection([
       'driver'    => 'mysql',
-      'host'      => 'localhost',
-      'database'  => 'cursophp',
-      'username'  => 'root',
-      'password'  => '',
+      'host'      => getenv('DB_HOST'),
+      'database'  => getenv('DB_NAME'),
+      'username'  => getenv('DB_USER'),
+      'password'  => getenv('DB_PASS'),
       'charset'   => 'utf8',
       'collation' => 'utf8_unicode_ci',
       'prefix'    => '',
@@ -42,11 +47,13 @@
     ]);
     $map->get('addJobs', '/PHPCourse/jobs/add', [
         'controller' => 'App\Controllers\JobsController',
-        'action' => 'getAddJobAction'
+        'action' => 'getAddJobAction',
+        'auth' => true
     ]);
     $map->get('addProjects', '/PHPCourse/project/add', [
         'controller' => 'App\Controllers\ProjectController',
-        'action' => 'getAddProjectAction'
+        'action' => 'getAddProjectAction',
+        'auth' => true
     ]);
 
     $map->post('saveJobs', '/PHPCourse/jobs/add', [
@@ -57,6 +64,36 @@
         'controller' => 'App\Controllers\ProjectController',
         'action' => 'getAddProjectAction'
     ]);
+    $map->get('createUsers', '/PHPCourse/users/add', [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'create',
+        'auth' => true
+    ]);
+    $map->post('storeUsers', '/PHPCourse/users/add', [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'store'
+    ]);
+
+    $map->get('loginForm', '/PHPCourse/login', [
+        'controller' => 'App\Controllers\AuthController',
+        'action' => 'getLogin'
+    ]);
+
+    $map->get('logout', '/PHPCourse/logout', [
+        'controller' => 'App\Controllers\AuthController',
+        'action' => 'getLogout'
+    ]);
+    
+    $map->post('auth', '/PHPCourse/auth', [
+        'controller' => 'App\Controllers\AuthController',
+        'action' => 'postLogin'
+    ]);
+
+    $map->get('admin', '/PHPCourse/admin', [
+        'controller' => 'App\Controllers\AdminController',
+        'action' => 'getIndex',
+        'auth' => true
+    ]);
 
     $matcher = $routerContainer->getMatcher();
     $route = $matcher->match($request);
@@ -65,13 +102,30 @@
         echo 'No route';
     } else{
         $handlerData = $route->handler;
-        $controllerName = $handlerData['controller'];
-        $actionName = $handlerData['action'];
+        
+        $needsAuth = $handlerData['auth'] ?? false;
+        $sessionUserId = $_SESSION['userId'] ?? null;
+
+        if(!$sessionUserId && $needsAuth){
+            echo 'Protected route';
+            $controllerName = 'App\Controllers\AuthController';
+            $actionName = "getLogin";
+        }else{
+            $controllerName = $handlerData['controller'];
+            $actionName = $handlerData['action'];
+        }
 
         $controller = new $controllerName;
         $response = $controller->$actionName($request);
         //require($route->handler);
 
+        foreach($response->getHeaders() as $name => $values){
+            foreach($values as $value){
+                header(sprintf('%s: %s',$name, $value), false);
+            }
+        }
+
+        http_response_code($response->getStatusCode());
         echo $response->getBody();
     }
 

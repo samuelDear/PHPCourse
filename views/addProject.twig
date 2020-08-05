@@ -3,6 +3,11 @@
 
 {% block content %}
 	<h1>Add Project</h1>
+	{% if responseMsg %}
+        <div class="alert alert-primary" role="alert">
+            {{ responseMsg }}
+        </div>
+    {% endif %}
 	<form action="/PHPCourse/project/add" method="post">
 		<label for="title">Title:</label>
 		<input type="text" name="title"><br>

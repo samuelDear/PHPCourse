@@ -8,6 +8,8 @@
         "illuminate/database": "^7.22",
         "laminas/laminas-diactoros": "^2.3",
         "aura/router": "^3.1",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "respect/validation": "^2.0",
+        "vlucas/phpdotenv": "^5.1"
     }
 }
